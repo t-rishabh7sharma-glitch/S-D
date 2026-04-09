@@ -12,6 +12,9 @@
     },
     "ios": { "supportsTablet": true },
     "android": { "adaptiveIcon": { "backgroundColor": "#0c0f14" } },
+    "web": {
+      "bundler": "metro"
+    },
     "plugins": ["expo-router"]
   }
 }

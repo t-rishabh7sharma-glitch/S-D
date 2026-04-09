@@ -1,0 +1,9 @@
+# Netlify: set "Base directory" to `apps/mobile` (or place this file in site root and adjust paths).
+# Build output from `expo export -p web` is `./dist` under this app folder.
+
+[build]
+  command = "npm install && npx expo export -p web"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
