@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    @apply font-sans text-ink bg-surface antialiased;
+  }
+  ::selection {
+    @apply bg-primary/25 text-ink;
+  }
+}
+
+@keyframes snd-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes snd-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes snd-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-4px);
+  }
+  40%,
+  80% {
+    transform: translateX(4px);
+  }
+}
+
+@layer utilities {
+  .focus-ring {
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+  }
+  .snd-fade-in {
+    animation: snd-fade-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .snd-toast-in {
+    animation: snd-toast-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .snd-shake {
+    animation: snd-shake 0.45s ease-out;
+  }
+}

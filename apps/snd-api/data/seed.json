@@ -1,0 +1,241 @@
+{
+  "employees": [
+    {
+      "userId": "ADMIN-101",
+      "roleKey": "ADMIN",
+      "roleTitle": "Administrator",
+      "displayName": "John",
+      "workspace": "bo"
+    },
+    {
+      "userId": "TDR-101",
+      "roleKey": "TDR",
+      "roleTitle": "Territory Development Rep",
+      "displayName": "Sarah",
+      "workspace": "bo"
+    },
+    {
+      "userId": "ZBM-101",
+      "roleKey": "ZBM",
+      "roleTitle": "Zonal Business Manager",
+      "displayName": "Michael",
+      "workspace": "bo"
+    },
+    {
+      "userId": "SBM-101",
+      "roleKey": "ZBM",
+      "roleTitle": "Zonal Business Manager",
+      "displayName": "Michael",
+      "workspace": "bo"
+    },
+    {
+      "userId": "DSA-101",
+      "roleKey": "DSA",
+      "roleTitle": "Direct Sales Agent",
+      "displayName": "Chanda",
+      "workspace": "agent"
+    },
+    {
+      "userId": "AGENT-101",
+      "roleKey": "DSA",
+      "roleTitle": "Direct Sales Agent",
+      "displayName": "Alex",
+      "workspace": "agent"
+    }
+  ],
+  "directory": [
+    {
+      "id": "u1",
+      "name": "Chanda Mwansa",
+      "email": "chanda.m@field.demo",
+      "role": "DSA",
+      "path": "Central / Metro / North / Alpha",
+      "code": "DSA-88421",
+      "kyc": "VERIFIED",
+      "distributor": "Partner Distributors Ltd",
+      "beat": "CB-01"
+    },
+    {
+      "id": "u2",
+      "name": "Bwalya Kunda",
+      "email": "bwalya.k@field.demo",
+      "role": "DSA",
+      "path": "Central / Metro / North / Alpha",
+      "code": "DSA-88422",
+      "kyc": "PENDING",
+      "distributor": "Partner Distributors Ltd",
+      "beat": "CB-02"
+    },
+    {
+      "id": "u3",
+      "name": "Tisa Lungu",
+      "email": "tisa.l@field.demo",
+      "role": "TL",
+      "path": "Central / Metro / North",
+      "code": "—",
+      "kyc": "VERIFIED",
+      "distributor": "—",
+      "beat": "—"
+    }
+  ],
+  "orgTree": {
+    "id": "r",
+    "name": "National",
+    "level": "CSDO",
+    "children": [
+      {
+        "id": "h",
+        "name": "Consumer Sales",
+        "level": "HSD",
+        "children": [
+          {
+            "id": "z",
+            "name": "Central Zone",
+            "level": "ZBM",
+            "children": [
+              {
+                "id": "a",
+                "name": "Metro Area",
+                "level": "ASE",
+                "children": [
+                  {
+                    "id": "t",
+                    "name": "North TDR",
+                    "level": "TDR",
+                    "children": [
+                      {
+                        "id": "tl",
+                        "name": "Team Alpha",
+                        "level": "TL",
+                        "children": [
+                          { "id": "d1", "name": "DSA — Chanda M.", "level": "DSA" },
+                          { "id": "d2", "name": "DSA — Bwalya K.", "level": "DSA" }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "kpis": [
+    {
+      "name": "SIM Activations",
+      "unit": "count",
+      "freq": "MONTHLY",
+      "formula": "sum(activation_events)"
+    },
+    {
+      "name": "MoMo Gross Adds",
+      "unit": "count",
+      "freq": "WEEKLY",
+      "formula": "sum(momo_onboards)"
+    },
+    {
+      "name": "Float Availability",
+      "unit": "%",
+      "freq": "DAILY",
+      "formula": "avg(outlet_float_adequate)"
+    }
+  ],
+  "targetCampaign": {
+    "name": "FY26 Q1 SIM — National",
+    "total": 120000,
+    "method": "EQUAL SPLIT",
+    "status": "DRAFT",
+    "rows": [
+      { "node": "National", "amount": 120000, "pct": 100 },
+      { "node": "Central Zone", "amount": 40000, "pct": 33.3 },
+      { "node": "Metro Area", "amount": 18000, "pct": 15 },
+      { "node": "Team Alpha", "amount": 4200, "pct": 3.5 }
+    ]
+  },
+  "incentives": [
+    {
+      "name": "DSA SIM ladder",
+      "role": "DSA",
+      "product": "SIM",
+      "slabs": [
+        { "min": 0, "max": 49, "rate": "2%", "bonus": "—" },
+        { "min": 50, "max": 99, "rate": "3.5%", "bonus": "K 50" },
+        { "min": 100, "max": null, "rate": "5%", "bonus": "K 200" }
+      ]
+    },
+    {
+      "name": "MoMo acquisition bonus",
+      "role": "DSA",
+      "product": "MoMo",
+      "slabs": [{ "min": 0, "max": null, "rate": "flat", "bonus": "K 5 / GA" }]
+    }
+  ],
+  "rbac": [
+    {
+      "role": "Admin (IT)",
+      "modules": "All BO modules + user access setup",
+      "scope": "All zones",
+      "rw": "Full R/W + permission control"
+    },
+    {
+      "role": "TDR",
+      "modules": "Users, Territory, Reports",
+      "scope": "Assigned territory only",
+      "rw": "Operational write + limited config"
+    },
+    {
+      "role": "ZBM",
+      "modules": "Dashboard, Targets, Reports, Users (read)",
+      "scope": "Own zone only",
+      "rw": "Review + approvals"
+    }
+  ],
+  "heatmap": [
+    { "t": "Central", "sim": 92, "momo": 78, "fl": 88 },
+    { "t": "North", "sim": 85, "momo": 91, "fl": 72 },
+    { "t": "South", "sim": 76, "momo": 64, "fl": 80 }
+  ],
+  "trend": [
+    { "m": "Oct", "tgt": 9200, "act": 8800 },
+    { "m": "Nov", "tgt": 9500, "act": 9100 },
+    { "m": "Dec", "tgt": 9800, "act": 10200 },
+    { "m": "Jan", "tgt": 10000, "act": 9700 },
+    { "m": "Feb", "tgt": 10200, "act": 10500 },
+    { "m": "Mar", "tgt": 10500, "act": 10100 }
+  ],
+  "leaderboard": [
+    { "r": 1, "a": "Chanda Mwansa", "ga": 412, "z": "Central" },
+    { "r": 2, "a": "Mutinta S.", "ga": 398, "z": "Central" },
+    { "r": 3, "a": "Joseph M.", "ga": 371, "z": "North" },
+    { "r": 4, "a": "Lisa K.", "ga": 340, "z": "South" },
+    { "r": 5, "a": "Paul R.", "ga": 318, "z": "Central" }
+  ],
+  "exceptions": [
+    { "type": "Geo-fence override", "agent": "Bwalya Kunda", "st": "OPEN" },
+    { "type": "Offline manual sync", "agent": "Chanda Mwansa", "st": "PENDING_APPROVAL" },
+    { "type": "Missed visit", "agent": "Joseph M.", "st": "OPEN" }
+  ],
+  "floatAlerts": [
+    { "a": "Bwalya Kunda", "bal": 120, "th": 500, "sev": "critical" },
+    { "a": "Mutinta S.", "bal": 380, "th": 500, "sev": "warn" }
+  ],
+  "beats": [
+    { "user": "Chanda Mwansa", "beat": "LSK-CBD-01", "active": true },
+    { "user": "Bwalya Kunda", "beat": "LSK-CBD-02", "active": true }
+  ],
+  "territorySummary": {
+    "path": "Zambia → Central Zone → Metro Area → North TDR",
+    "beatsNote": "LSK-CBD-01 → Chanda · LSK-CBD-02 → Bwalya"
+  },
+  "dashboardKpis": {
+    "simMtd": 48920,
+    "simDeltaPct": 6.2,
+    "momoMtd": 31104,
+    "momoDeltaPct": 3.8,
+    "activeDsas": 1842,
+    "floatAdequacyPct": 94
+  },
+  "visits": []
+}

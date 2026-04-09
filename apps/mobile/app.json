@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "SND Field",
+    "slug": "snd-field",
+    "scheme": "sndfield",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#0c0f14"
+    },
+    "ios": { "supportsTablet": true },
+    "android": { "adaptiveIcon": { "backgroundColor": "#0c0f14" } },
+    "plugins": ["expo-router"]
+  }
+}
