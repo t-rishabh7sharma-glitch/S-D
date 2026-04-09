@@ -15,7 +15,11 @@ const sh = Platform.select({
 export default function SuperviseScreen() {
   const { routeSummary, exceptions, floatAlerts, acquisition, dormancy, leaderboard } = supervisor;
   return (
-    <ScrollView style={s.screen} contentContainerStyle={s.pad} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={s.screen}
+      contentContainerStyle={[s.pad, { flexGrow: 1 }]}
+      showsVerticalScrollIndicator={false}
+    >
       <Text style={s.h1}>Supervisor cockpit</Text>
       <Text style={s.sub}>TL · ASE · TDR · ZBM — demo data only</Text>
 

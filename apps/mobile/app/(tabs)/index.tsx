@@ -4,18 +4,20 @@ import {
   ScrollView,
   Pressable,
   StyleSheet,
-  Dimensions,
   Platform,
   RefreshControl,
+  useWindowDimensions,
 } from "react-native";
 import { useCallback, useState } from "react";
-import { Link } from "expo-router";
+import { useRouter } from "expo-router";
 import { agentHero, dailyTasks, checkInDemo, outlets } from "../../data/mock";
 import { colors, radii } from "../../theme";
 
-const CARD_W = Dimensions.get("window").width - 40;
-
 export default function AgentHome() {
+  const router = useRouter();
+  const { width } = useWindowDimensions();
+  const CARD_W = Math.max(280, width - 40);
+
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -24,12 +26,17 @@ export default function AgentHome() {
 
   const pct = Math.min(100, Math.round((agentHero.actionsDone / agentHero.actionsNeeded) * 100));
 
+  const refresh =
+    Platform.OS === "web" ? undefined : (
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#0f766e" />
+    );
+
   return (
     <ScrollView
       style={s.screen}
-      contentContainerStyle={s.pad}
+      contentContainerStyle={[s.pad, { flexGrow: 1 }]}
       showsVerticalScrollIndicator={false}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#0f766e" />}
+      refreshControl={refresh}
     >
       <Text style={s.kicker}>Check-in (auto)</Text>
       <View style={s.checkIn}>
@@ -82,21 +89,31 @@ export default function AgentHome() {
 
       <Text style={s.section}>Outlets</Text>
       {outlets.map((o) => (
-        <Link key={o.id} href={`/visit/${o.id}`} asChild>
-          <Pressable style={({ pressed }) => [s.outlet, pressed && s.outletPressed]}>
-            <View style={s.outletIcon}>
-              <Text style={s.outletIconText}>{o.name.charAt(0)}</Text>
-            </View>
-            <View style={s.outletBody}>
-              <Text style={s.outletName}>{o.name}</Text>
-              <Text style={s.outletMeta}>
-                {o.code} · {o.distanceM}m
-              </Text>
-            </View>
-            <Text style={s.visitCta}>Visit →</Text>
-          </Pressable>
-        </Link>
+        <Pressable
+          key={o.id}
+          accessibilityRole="button"
+          onPress={() => router.push(`/visit/${o.id}`)}
+          style={({ pressed }) => [s.outlet, pressed && s.outletPressed]}
+        >
+          <View style={s.outletIcon}>
+            <Text style={s.outletIconText}>{o.name.charAt(0)}</Text>
+          </View>
+          <View style={s.outletBody}>
+            <Text style={s.outletName}>{o.name}</Text>
+            <Text style={s.outletMeta}>
+              {o.code} · {o.distanceM}m
+            </Text>
+          </View>
+          <Text style={s.visitCta}>Visit →</Text>
+        </Pressable>
       ))}
+
+      {Platform.OS === "web" ? (
+        <Text style={s.webNote}>
+          Field agent preview. Back Office (dashboard, hierarchy, targets, RBAC) is the separate SND web app — not this
+          deploy.
+        </Text>
+      ) : null}
     </ScrollView>
   );
 }
@@ -230,4 +247,13 @@ const s = StyleSheet.create({
   outletName: { color: colors.ink, fontSize: 16, fontWeight: "700" },
   outletMeta: { color: colors.muted, marginTop: 4, fontSize: 13 },
   visitCta: { color: colors.primary, fontSize: 15, fontWeight: "800" },
+  webNote: {
+    marginTop: 24,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    color: colors.muted,
+    fontSize: 12,
+    lineHeight: 18,
+  },
 });

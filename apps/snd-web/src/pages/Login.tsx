@@ -1,26 +1,40 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useState } from "react";
+import { Navigate, useSearchParams } from "react-router-dom";
 import { useSession } from "@/context/SessionContext";
-import { defaultPath } from "@/lib/session";
+import { homePathForSession } from "@/lib/rbac";
 import { Button } from "@/components/ui/Button";
+
+function safeNextPath(next: string | null): string | null {
+  if (!next || !next.startsWith("/") || next.startsWith("//")) return null;
+  return next;
+}
 
 export function LoginPage() {
   const { session, ready, signIn } = useSession();
-  const navigate = useNavigate();
   const [params] = useSearchParams();
-  const next = params.get("next");
+  const nextRaw = params.get("next");
+  const next = safeNextPath(nextRaw);
 
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
 
-  useEffect(() => {
-    if (!ready || !session) return;
-    const path =
-      next && next.startsWith("/") && !next.startsWith("//") ? next : defaultPath(session.workspace);
-    navigate(path, { replace: true });
-  }, [ready, session, next, navigate]);
+  if (!ready) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-surface px-6">
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-navy text-sm font-extrabold tracking-wider text-white shadow-lg shadow-primary/25 ring-4 ring-primary/10">
+          SND
+        </div>
+        <p className="text-sm font-medium text-ink-secondary">Loading…</p>
+      </div>
+    );
+  }
+
+  if (session) {
+    const path = next ?? homePathForSession(session);
+    return <Navigate to={path} replace />;
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -28,15 +42,7 @@ export function LoginPage() {
     setBusy(true);
     try {
       const r = await signIn(id, pw);
-      if (!r.ok) {
-        setErr(r.error);
-        return;
-      }
-      const path =
-        next && next.startsWith("/") && !next.startsWith("//")
-          ? next
-          : defaultPath(r.session.workspace);
-      navigate(path, { replace: true });
+      if (!r.ok) setErr(r.error);
     } finally {
       setBusy(false);
     }
@@ -55,10 +61,11 @@ export function LoginPage() {
             Enterprise S&amp;D
           </div>
           <h1 className="max-w-md text-4xl font-bold leading-[1.1] tracking-tight">
-            One platform for field execution and commercial control.
+            One sign-in for every role.
           </h1>
           <p className="mt-5 max-w-sm text-[15px] leading-relaxed text-white/65">
-            Hierarchies, territories, targets, incentives, and analytics — with strict role boundaries.
+            Same login page for administrators, territory teams, and field agents. After you sign in, we send you to
+            Back Office or Field based on your account — no separate URLs to remember.
           </p>
         </div>
         <p className="relative z-10 text-xs text-white/40">
@@ -70,11 +77,11 @@ export function LoginPage() {
         <div className="mx-auto w-full max-w-[400px] snd-fade-in">
           <div className="mb-8 lg:hidden">
             <h1 className="text-2xl font-bold tracking-tight text-ink">Sign in</h1>
-            <p className="mt-1 text-sm text-ink-muted">Sales &amp; Distribution control plane</p>
+            <p className="mt-1 text-sm text-ink-muted">Sales &amp; Distribution — one entry for all roles</p>
           </div>
           <div className="hidden lg:block">
             <h2 className="text-2xl font-bold tracking-tight text-ink">Sign in</h2>
-            <p className="mt-1 text-sm text-ink-muted">Use your employee ID (demo password: any)</p>
+            <p className="mt-1 text-sm text-ink-muted">Employee ID + password (demo: password can be anything)</p>
           </div>
 
           <form onSubmit={submit} className="mt-8 space-y-5">
@@ -130,19 +137,26 @@ export function LoginPage() {
 
           <details className="mt-10 rounded-xl border border-slate-200/80 bg-white p-4 shadow-card">
             <summary className="cursor-pointer text-sm font-semibold text-ink">
-              Demo accounts
+              Demo accounts &amp; where you land
             </summary>
-            <div className="mt-3 space-y-2 text-xs leading-relaxed text-ink-muted">
+            <div className="mt-3 space-y-3 text-xs leading-relaxed text-ink-muted">
               <p>
-                <span className="font-semibold text-ink">Back office:</span> ADMIN-101 · TDR-101 · ZBM-101
+                <span className="font-semibold text-ink">Back office:</span> ADMIN-101 · TDR-101 · ZBM-101 → routed to
+                Back Office (different home modules by role).
               </p>
               <p>
-                <span className="font-semibold text-ink">Field:</span> DSA-101 · AGENT-101
+                <span className="font-semibold text-ink">Field:</span> DSA-101 · AGENT-101 → routed to the Field app.
               </p>
+              <ul className="list-inside list-disc space-y-1 text-[11px] text-ink-secondary">
+                <li>ADMIN → dashboard (full BO)</li>
+                <li>TDR → Users &amp; agents (ops)</li>
+                <li>ZBM → Targets (commercial)</li>
+                <li>DSA / agent → Field home</li>
+              </ul>
               <p className="text-[11px]">
-                Password is not validated in MVP. With dev defaults, BO/field data syncs when{" "}
-                <code className="rounded bg-slate-100 px-1 py-0.5 text-[10px] text-navy">snd-api</code> is
-                running on port 4000.
+                With dev defaults, data syncs when{" "}
+                <code className="rounded bg-slate-100 px-1 py-0.5 text-[10px] text-navy">snd-api</code> runs on port
+                4000.
               </p>
             </div>
           </details>

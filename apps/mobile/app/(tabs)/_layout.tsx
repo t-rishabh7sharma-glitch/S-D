@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Alert, StyleSheet } from "react-native";
+import { View, Text, Pressable, Alert, StyleSheet, Platform } from "react-native";
 import { Tabs } from "expo-router";
 import { colors } from "../../theme";
 
@@ -24,6 +24,9 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
+        // Web: load both tabs up front so switching actually mounts the scene (lazy tabs often break on RN Web).
+        lazy: false,
+        sceneContainerStyle: { flex: 1 },
         headerStyle: {
           backgroundColor: colors.navy,
           elevation: 0,
@@ -53,6 +56,7 @@ export default function TabLayout() {
           shadowOffset: { width: 0, height: -2 },
           shadowOpacity: 0.06,
           shadowRadius: 8,
+          ...(Platform.OS === "web" ? { position: "relative" as const, zIndex: 20 } : null),
         },
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.muted,
@@ -65,6 +69,7 @@ export default function TabLayout() {
           title: "Field",
           headerTitle: () => <FieldHeaderTitle />,
           tabBarLabel: "Field",
+          href: "/",
         }}
       />
       <Tabs.Screen
@@ -73,6 +78,7 @@ export default function TabLayout() {
           title: "Supervise",
           headerTitle: () => <SuperviseHeaderTitle />,
           tabBarLabel: "Supervise",
+          href: "/supervise",
         }}
       />
     </Tabs>

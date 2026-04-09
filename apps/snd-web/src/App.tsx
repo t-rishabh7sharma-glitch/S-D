@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import type { ReactNode } from "react";
 import { useSession } from "@/context/SessionContext";
-import { defaultPath } from "@/lib/session";
+import { homePathForSession } from "@/lib/rbac";
 import { LoginPage } from "@/pages/Login";
 import { BoLayout } from "@/pages/bo/BoLayout";
 import { BoOutlet } from "@/pages/bo/BoOutlet";
@@ -67,7 +67,7 @@ function RootGate() {
     );
   }
   if (!session) return <Navigate to="/login" replace />;
-  return <Navigate to={defaultPath(session.workspace)} replace />;
+  return <Navigate to={homePathForSession(session)} replace />;
 }
 
 export default function App() {

@@ -88,6 +88,3 @@ export function login(employeeId: string, _password: string): { ok: true; sessio
   return { ok: true, session };
 }
 
-export function defaultPath(workspace: Workspace): string {
-  return workspace === "bo" ? "/bo/dashboard" : "/field";
-}

@@ -17,6 +17,8 @@ It is a **control-plane + field** sketch: some areas are fully wired to the API;
 
 **Run (from repo root):** `npm install` then `npm run mvp` starts API (`:4000`) + Web (`:3000`). Mobile: `npm run mobile`.
 
+**Single sign-in (SND Web):** One page at **`/login`** for every demo account. After authentication, **`homePathForSession()`** (`apps/snd-web/src/lib/rbac.ts`) redirects by role: **ADMIN** → `/bo/dashboard`, **TDR** → `/bo/users`, **ZBM** → `/bo/targets`, field **DSA** → `/field`. Unauthenticated visits to `/bo/*` or `/field/*` redirect to `/login?next=…`.
+
 **Static only:** `npm run serve:static` or `.\scripts\START-STATIC.cmd` or `cd` to repo root and `powershell -File .\scripts\serve-static.ps1` (serves `static/`).
 
 ---
